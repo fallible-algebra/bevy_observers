@@ -1,5 +1,6 @@
 //! This crate provides the [`observers`] macro. See its documentation for further info.
 
+pub use bevy_ecs;
 use bevy_ecs::{component::HookContext, prelude::*, world::DeferredWorld};
 
 /// A macro for setting [`Observer`]s on an entity from within a [`Bundle`]. It is similar to the [`children`] macro, but for observers.
@@ -21,7 +22,7 @@ use bevy_ecs::{component::HookContext, prelude::*, world::DeferredWorld};
 #[macro_export]
 macro_rules! observers {
     [$($observer:expr),*$(,)?] => {
-       $crate::Observers(vec![$(bevy_ecs::observer::Observer::new($observer)),*])
+       $crate::Observers(vec![$($crate::bevy_ecs::observer::Observer::new($observer)),*])
     };
 }
 
