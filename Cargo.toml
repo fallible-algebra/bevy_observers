@@ -2,7 +2,7 @@
 name = "bevy_bundled_observers"
 description = "Set observers on an entity from inside bundles."
 repository = "https://github.com/tim-blackbird/bevy_observers"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 license = "MIT OR Apache-2.0"
 keywords = ["bevy", "ecs"]
