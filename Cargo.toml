@@ -1,0 +1,23 @@
+[package]
+name = "bevy_bundled_observers"
+description = "Set observers on an entity from inside bundles."
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+keywords = ["bevy", "ecs"]
+
+
+[dependencies]
+bevy_ecs = { version = "0.16", default-features = false }
+
+[dev-dependencies]
+bevy = { version = "0.16", default-features = false, features = ["bevy_log"] }
+
+
+[lints.rust]
+missing_docs = "deny"
+
+[lints.clippy]
+std_instead_of_core = "warn"
+std_instead_of_alloc = "warn"
+alloc_instead_of_core = "warn"
