@@ -1,19 +1,19 @@
 //! This crate provides the [`observers`] macro. See its documentation for further info.
 
 pub use bevy_ecs;
-use bevy_ecs::{component::HookContext, prelude::*, world::DeferredWorld};
+use bevy_ecs::{lifecycle::HookContext, prelude::*, world::DeferredWorld};
 
 /// A macro for setting [`Observer`]s on an entity from within a [`Bundle`]. It is similar to the [`children`] macro, but for observers.
 ///
 /// ```rust
 /// # use bevy::prelude::*;
 /// # use bevy_bundled_observers::observers;
-/// # #[derive(Event)] struct OnCollect;
+/// # #[derive(EntityEvent)] struct Collect { entity: Entity };
 ///
 /// fn coin() -> impl Bundle {
 ///     (
 ///         Name::new("Coin"),
-///         observers![|_: Trigger<OnCollect>| {
+///         observers![|_: On<Collect>| {
 ///             info!("You collected a coin!");
 ///         }],
 ///     )
@@ -35,12 +35,12 @@ macro_rules! observers {
 /// ```rust
 /// # use bevy::prelude::*;
 /// # use bevy_bundled_observers::Observers;
-/// # #[derive(Event)] struct OnCollect;
+/// # #[derive(EntityEvent)] struct OnCollect { entity: Entity };
 ///
 /// fn coin() -> impl Bundle {
 ///     (
 ///         Name::new("Coin"),
-///         Observers(vec![Observer::new(|_: Trigger<OnCollect>| {
+///         Observers(vec![Observer::new(|_: On<OnCollect>| {
 ///             info!("You collected a coin!");
 ///         })]),
 ///     )
@@ -68,8 +68,8 @@ mod test {
 
     #[test]
     fn test() {
-        #[derive(Event, Debug)]
-        struct OnFoo;
+        #[derive(EntityEvent, Debug)]
+        struct OnFoo {entity: Entity}
 
         #[derive(Component, Debug, PartialEq, Eq)]
         struct Bar(i32);
@@ -79,13 +79,13 @@ mod test {
         let entity = world
             .spawn((
                 Bar(0),
-                observers![|trigger: Trigger<OnFoo>, mut query: Query<&mut Bar>| {
-                    query.get_mut(trigger.target()).unwrap().0 += 1;
+                observers![|trigger: On<OnFoo>, mut query: Query<&mut Bar>| {
+                    query.get_mut(trigger.entity).unwrap().0 += 1;
                 }],
             ))
             .id();
 
-        world.trigger_targets(OnFoo, entity);
+        world.trigger(OnFoo { entity });
 
         assert_eq!(world.get::<Bar>(entity), Some(&Bar(1)));
     }
